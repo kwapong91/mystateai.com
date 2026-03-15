@@ -58,8 +58,8 @@ export function AIChatPanel({ compact = false }: { compact?: boolean }) {
             <Sparkles className="h-4 w-4" />
           </div>
           <div>
-            <CardTitle>AI Assistant</CardTitle>
-            <p className="text-sm text-muted-foreground">Opportunity guidance panel</p>
+            <CardTitle>Opportunity Copilot</CardTitle>
+            <p className="text-sm text-muted-foreground">Ask about requirements, risks, and bid strategy while you review.</p>
           </div>
         </div>
       </CardHeader>

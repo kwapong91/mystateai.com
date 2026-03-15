@@ -17,23 +17,63 @@ import {
 import { useState } from "react";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LogoutButton } from "@/components/LogoutButton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/opportunities", label: "Opportunities", icon: BriefcaseBusiness },
-  { href: "/opportunities", label: "AI Analysis", icon: Sparkles },
-  { href: "/saved-opportunities", label: "Saved Opportunities", icon: Star },
-  { href: "/partners", label: "Partners", icon: Network },
-  { href: "/documents", label: "Documents", icon: FileStack },
-  { href: "/settings", label: "Settings", icon: Settings }
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    isActive: (pathname: string) => pathname === "/dashboard"
+  },
+  {
+    href: "/opportunities",
+    label: "Opportunities",
+    icon: BriefcaseBusiness,
+    isActive: (pathname: string) => pathname === "/opportunities"
+  },
+  {
+    href: "/analysis",
+    label: "AI Analysis",
+    icon: Sparkles,
+    isActive: (pathname: string) => pathname === "/analysis" || /^\/opportunities\/[^/]+$/.test(pathname)
+  },
+  {
+    href: "/saved-opportunities",
+    label: "Saved Opportunities",
+    icon: Star,
+    isActive: (pathname: string) => pathname === "/saved-opportunities"
+  },
+  {
+    href: "/partners",
+    label: "Partners",
+    icon: Network,
+    isActive: (pathname: string) => pathname === "/partners"
+  },
+  {
+    href: "/documents",
+    label: "Documents",
+    icon: FileStack,
+    isActive: (pathname: string) => pathname === "/documents"
+  },
+  {
+    href: "/settings",
+    label: "Settings",
+    icon: Settings,
+    isActive: (pathname: string) => pathname === "/settings"
+  }
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const { user, loading } = useUser();
+  const email = user?.email ?? "Not signed in";
+  const initials = user?.email?.slice(0, 2).toUpperCase() ?? "MS";
 
   return (
     <aside
@@ -60,8 +100,8 @@ export function Sidebar() {
       </div>
 
       <nav className="mt-8 flex-1 space-y-1">
-        {items.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || (href === "/opportunities" && pathname.startsWith("/opportunities"));
+        {items.map(({ href, label, icon: Icon, isActive }) => {
+          const active = isActive(pathname);
           return (
             <Link
               key={label}
@@ -84,14 +124,17 @@ export function Sidebar() {
         <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
           <ThemeToggle />
         </div>
+        <div className={cn(collapsed ? "flex justify-center" : "")}>
+          <LogoutButton collapsed={collapsed} />
+        </div>
         <div className={cn("flex items-center gap-3 rounded-2xl bg-secondary/60 p-3", collapsed && "justify-center")}>
           <Avatar>
-            <AvatarFallback>IV</AvatarFallback>
+            <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           {!collapsed && (
             <div>
-              <p className="text-sm font-medium">Ivan Contractor</p>
-              <p className="text-xs text-muted-foreground">Growth + Capture Lead</p>
+              <p className="text-sm font-medium">{loading ? "Loading..." : email}</p>
+              <p className="text-xs text-muted-foreground">Authenticated workspace</p>
             </div>
           )}
         </div>

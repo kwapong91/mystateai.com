@@ -16,7 +16,7 @@ export function AppShell({
       <div className="flex-1">
         <div className={cn("mx-auto grid min-h-screen max-w-[1800px] gap-6 px-4 py-4 lg:px-6 lg:py-6", rightPanel ? "xl:grid-cols-[minmax(0,1fr)_360px]" : "")}>
           <main className="min-w-0">{children}</main>
-          {rightPanel ? <aside className="hidden xl:block">{rightPanel}</aside> : null}
+          {rightPanel ? <aside className="hidden xl:block xl:self-start">{rightPanel}</aside> : null}
         </div>
       </div>
     </div>
